@@ -36,6 +36,7 @@ int* process_file_into_int_array( char* file_name, int* num_lines )
 /**
  * Processes a file and prints the two numbers which add up to 2020
  * @param file_name the name of the file to process
+ * @param three_numbers are we looking for 3 numbers or 2
  */ 
 void solve_2020_problem( char* file_name, bool three_numbers )
 {
