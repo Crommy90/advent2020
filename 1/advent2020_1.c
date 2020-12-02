@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h> 
 
 /**
  * Processes a file and returns the list of integers within it
@@ -36,7 +37,7 @@ int* process_file_into_int_array( char* file_name, int* num_lines )
  * Processes a file and prints the two numbers which add up to 2020
  * @param file_name the name of the file to process
  */ 
-void solve_2020_problem( char* file_name )
+void solve_2020_problem( char* file_name, bool three_numbers )
 {
 	int num_lines = 0;
 	int* data = process_file_into_int_array( file_name, &num_lines );
@@ -44,9 +45,19 @@ void solve_2020_problem( char* file_name )
 	{
 		for( int j = i + 1; j < num_lines; ++j )
 		{
-			if( ( data[i] + data[j] ) == 2020 )
+			if( three_numbers )
 			{
-				printf( "Solution is %d and %d, which make %d\n", data[i], data[j], data[i]*data[j] );
+				for( int k = j + 1; k < num_lines; ++k )
+				{
+					if( ( data[i] + data[j] + data[k] ) == 2020 )
+					{
+						printf( "Three Numbers: Solution is %d, %d, and %d, which make %d\n", data[i], data[j], data[k], data[i]*data[j]*data[k] );
+					}
+				}
+			}
+			else if( ( data[i] + data[j] ) == 2020 )
+			{
+				printf( "Two Numbers: Solution is %d and %d, which make %d\n", data[i], data[j], data[i]*data[j] );
 			}
 		}
 	}
@@ -56,9 +67,11 @@ void solve_2020_problem( char* file_name )
 int main()
 {
 	printf( "Solving Example problem\n" );
-	solve_2020_problem( "data/sample.txt" );
-	
+	solve_2020_problem( "data/sample.txt", false );
+	solve_2020_problem( "data/sample.txt", true );
+	printf("\n");
 	printf( "Solving Actual problem\n" );
-	solve_2020_problem( "data/actual.txt" );
+	solve_2020_problem( "data/actual.txt", false );
+	solve_2020_problem( "data/actual.txt", true );
 	return 0;
 }
