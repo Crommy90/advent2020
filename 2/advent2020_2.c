@@ -40,7 +40,7 @@ struct PasswordData get_password_data_for_string( const char* line )
 	++index;
 	pdata.letter = line[index];
 	int copy_index = 0;
-	index += 2;
+	index += 3;
 	while( line[index] != '\n'
 			&& line[index] != '\0' )
 	{
@@ -80,6 +80,18 @@ bool test_old_password_system( const struct PasswordData* data )
 	}
 	return true;
 }
+
+
+/**
+ * Tests whether a password passes the new password system
+ * @param data the password to test
+ * @return if the password passes the test
+ */ 
+bool test_new_password_system( const struct PasswordData* data )
+{
+	return data->password[data->min_num-1] == data->letter
+			^ data->password[data->max_num-1] == data->letter;
+}
 	
 
 
@@ -107,6 +119,10 @@ void solve_problem( char* file_name, bool test_frequency )
 		{
 			valid = test_old_password_system( &data );
 		}
+		else
+		{
+			valid = test_new_password_system( &data );
+		}
 		if( valid )
 		{
 			++valid_count;
@@ -124,12 +140,20 @@ void solve_problem( char* file_name, bool test_frequency )
 
 int main()
 {
-	printf( "Solving Example problem\n" );
+	printf( "Solving Example problem in old system\n" );
 	solve_problem( "data/sample.txt", true );
 	printf("\n");
 	
-	printf( "Solving Actual problem\n" );
+	printf( "Solving Actual problem in old system\n" );
 	solve_problem( "data/actual.txt", true );
+	printf("\n");
+	
+	printf( "Solving Example problem in new system\n" );
+	solve_problem( "data/sample.txt", false );
+	printf("\n");
+	
+	printf( "Solving Actual problem in new system\n" );
+	solve_problem( "data/actual.txt", false );
 	printf("\n");
 
 	return 0;
