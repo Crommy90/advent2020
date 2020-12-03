@@ -51,6 +51,35 @@ struct PasswordData get_password_data_for_string( const char* line )
 	pdata.password[copy_index] = '\0';
 	return pdata;
 }
+
+/**
+ * Tests whether a password passes the old password system
+ * @param data the password to test
+ * @return if the password passes the test
+ */ 
+bool test_old_password_system( const struct PasswordData* data )
+{
+	int char_count = 0;
+	int index = 0;
+	//printf( "Letter %c, min %d, max %d, pwd %s\n", data.letter, data.min_num, data.min_num, data.password );
+	while( data->password[index] != '\0' )
+	{
+		if( data->password[index] == data->letter )
+		{
+			++char_count;
+			if( char_count > data->max_num )
+			{
+				return false;
+			}
+		}
+		++index;
+	}
+	if( char_count < data->min_num )
+	{
+		return false;
+	}
+	return true;
+}
 	
 
 
@@ -58,7 +87,7 @@ struct PasswordData get_password_data_for_string( const char* line )
  * Processes a file and prints the number of valid passwords
  * @param file_name the name of the file to process
  */ 
-void solve_problem( char* file_name )
+void solve_problem( char* file_name, bool test_frequency )
 {
 	FILE* file_ptr = fopen( file_name, "r" );
 	if( !file_ptr )
@@ -73,26 +102,10 @@ void solve_problem( char* file_name )
 	while( fgets(buf, 1000, file_ptr) != NULL )
 	{
 		struct PasswordData data = get_password_data_for_string( buf );
-		int char_count = 0;
-		int index = 0;
 		bool valid = true;
-		//printf( "Letter %c, min %d, max %d, pwd %s\n", data.letter, data.min_num, data.min_num, data.password );
-		while( data.password[index] != '\0' )
+		if( test_frequency )
 		{
-			if( data.password[index] == data.letter )
-			{
-				++char_count;
-				if( char_count > data.max_num )
-				{
-					valid = false;
-					break;
-				}
-			}
-			++index;
-		}
-		if( char_count < data.min_num )
-		{
-			valid = false;
+			valid = test_old_password_system( &data );
 		}
 		if( valid )
 		{
@@ -112,11 +125,11 @@ void solve_problem( char* file_name )
 int main()
 {
 	printf( "Solving Example problem\n" );
-	solve_problem( "data/sample.txt" );
+	solve_problem( "data/sample.txt", true );
 	printf("\n");
 	
 	printf( "Solving Actual problem\n" );
-	solve_problem( "data/actual.txt" );
+	solve_problem( "data/actual.txt", true );
 	printf("\n");
 
 	return 0;
